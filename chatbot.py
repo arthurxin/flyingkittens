@@ -37,7 +37,7 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 # with open("../../.flying/claude_key.txt","r") as f:
 #     API_KEY = f.read()
 # client = anthropic.Client(API_KEY.rstrip('\n'))
-client = anthropic.Client(mySecret = os.environ['MYSECRET']['key'])
+client = anthropic.Client(st.secrets['key'])
 
 if 'context' not in st.session_state:
     context_rules = '''

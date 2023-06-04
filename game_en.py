@@ -12,8 +12,8 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #         prompt=f"{anthropic.HUMAN_PROMPT} {messages}{anthropic.AI_PROMPT}",
         prompt = messages,
         stop_sequences=[anthropic.HUMAN_PROMPT],
-#         model="claude-v1.3-100k",
-        model="claude-instant-v1.1-100k",
+        model="claude-v1.3-100k",
+        # model="claude-instant-v1.1-100k",
         max_tokens_to_sample=max_tokens_to_sample,
     )
     return resp["completion"].strip(' ')
@@ -33,9 +33,9 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #     except Exception as e:
 #         st.error("Invalid key!")
 
-with open("../../.flying/claude_key.txt","r") as f:
-    API_KEY = f.read()
-client = anthropic.Client(API_KEY.rstrip('\n'))
+# with open("../../.flying/claude_key.txt","r") as f:
+#     API_KEY = f.read()
+client = anthropic.Client(st.secrets['key'])
 
 if 'context' not in st.session_state:
     context_rules = '''

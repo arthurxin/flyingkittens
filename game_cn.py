@@ -2,7 +2,6 @@ import anthropic
 import streamlit as st
 from streamlit_chat import message
 import time
-import os
 
 # st.set_page_config(initial_sidebar_state='collapsed')
 st.markdown('Flyingkitten')
@@ -34,10 +33,9 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #     except Exception as e:
 #         st.error("Invalid key!")
 
-# with open("../../.flying/claude_key.txt","r") as f:
-#     API_KEY = f.read()
-# client = anthropic.Client(API_KEY.rstrip('\n'))
-client = anthropic.Client(st.secrets['key'])
+with open("../../.flying/claude_key.txt","r") as f:
+    API_KEY = f.read()
+client = anthropic.Client(API_KEY.rstrip('\n'))
 
 if 'context' not in st.session_state:
     context_rules = '''
@@ -582,22 +580,22 @@ with st.sidebar:
         st.session_state.conclusion_input = ''
         
     with st.form(key = "conclusion", clear_on_submit=False):
-        question1 = "1.Louis和Rex在进行什么秘密交易?"
-        question2 = "2.他们在哪里藏毒?"
-        question3 = "3.老船长Hans被谁杀死的?"
-        question4 = "4.两个人关系破裂的原因?"
-        question5 = "5.Rex起杀心的导火索?"
-        question6 = "6.空弹壳藏在哪里?"
+        question1 = "1.谁是凶手?"
+        question2 = "2.作案动机是什么?"
+        question3 = "3.作案工具是什么,藏在哪里?"
+        question4 = "4.老船长Hans被谁杀死的?"
+        question5 = "5.船上哪些人参与了毒品交易?"
+
         answer1 = st.text_input(question1,"")
         answer2 = st.text_input(question2,"")
         answer3 = st.text_input(question3,"")
         answer4 = st.text_input(question4,"")
         answer5 = st.text_input(question5,"")
-        answer6 = st.text_input(question6,"")
+
         submitted = st.form_submit_button("Submit")
         
         if submitted:
-            st.session_state.conclusion_input = question1+answer1 + question2+answer2 + question3+answer3 + question4+answer4 + question5+answer5 + question6+answer6
+            st.session_state.conclusion_input = question1+answer1 + question2+answer2 + question3+answer3 + question4+answer4 + question5+answer5
         
         
     if st.session_state.conclusion_input != '':
@@ -606,21 +604,23 @@ with st.sidebar:
 【你的回答需要遵守以下原则】：\
 你的回答必须用中文回应。\
 在你回复之前，请阅读一遍游戏规则。\
+在侦探X先生未完成context_rules下全部剧情内容、主菜单下1-4全部任务选项以前，你不可以回复任何关于本环节conclusion的问题，也不可以告知侦探真凶姓名和作案动机。\
+在侦探X先生完成context_rules下全部剧情内容、主菜单下1-4全部任务选项以后，你必须提示侦探填写侧栏conclusion的正确答案。\
 阅读游戏规则后，请你参考true answer，从true story中筛选出符合的情节，评价user's conclusion, 找出user's conclusion和true answer的不同。\
 
         """
+        
         true_answer = f"""
 问题的正确答案:
-1.Louis和Rex在进行什么秘密交易？“贩毒”or“偷偷贩毒”or“偷偷贩卖毒品”，“贩卖毒品”，等意思相近的词都可以。
-2.他们在哪里藏毒？“装有火药的烟花盒子里”or“火药盒”or“烟花盒”，等意思相近的词都可以。
-3.老船长Hans被谁杀死的？“Louis”or“Louis杀死了船长”or“船上运毒的事件被发现老船长Hans发现，Louis将hans船长杀死”，意思相近的答案都可以。
-4.两个人关系破裂的原因？“Rex发现Dylan一直在帮Louis送巧克力(毒品)”or“利润分配”or“感到受到背叛”意思相近的答案都可以。
-5.Rex起杀心的导火索？“Louis给Rex送毒酒”or“Louis想杀人灭口”or“Rex想先下手为强”意思相近的答案都可以。
-6.空弹壳藏在哪里？“空的弹壳藏到了香蜡里面”or“香蜡”or“蜡烛”意思相近的答案都可以。\
+1.你认为真正的凶手是谁？“Rex”or“我认为是Rex”or“rex”，“酒吧经理Rex”，等意思相近的词都可以。
+2.请你说说凶手的作案动机？“Rex帮Louis卖毒品，最近因为Rex的订单变少，两人发生争执。案发当天，Rex发现Louis给自己送毒酒，决定先下手为强，杀死了Louis”，回答意思相近的词、句都可以。
+3.凶手的作案工具？“手枪”or“Rex的手枪“，意思相近的答案都可以。
+4. 船长Hans被谁杀死的？“Louis”or“Louis杀死了船长”or“船上运毒的事件被发现老船长Hans发现，Louis将hans船长杀死”，意思相近的答案都可以。
+5.船上哪人参与了毒品交易？“Louis、Rex、Dylan、Lincoln”or“酒吧经理、死者、乘务、船长”，等意思相近的答案都可以。\
         """
         true_story = f"""
 真相是:
-2 年前，经过父亲的朋友介绍Rex成为了东方之星号豪华游轮的酒吧经理，在船上的生活，让他对奢华生活产生了强烈的懂憬，之后，在酒吧偶然遇见了自己的高中校友，Louis，当时在船上担任三副，之后 2人越来越熟，不久后，Louis像Rex提出秘密交易的事情，告诉他利用游船偷偷贩毒可以获得巨额的利润，Rex经理接受了这个提议。他在自己管理的装有火药的烟花盒子里偷偷塞毒，Louis每个月都会有5万块打进来。1 年前，船上运毒的事件被发现老船长Hans发现，Louis将老船长杀死，然后强迫Rex经理去做假证，之后Louis就被无罪释放了。 对Louis感到恐惧的Rex经理买了把左轮枪来防身。老船长死后，Louis升为了副船长。半年前，Louis告诉Rex经理，自己贩卖毒品的利润会更高，于是让Rex经理将毒品藏在巧克力里面投递，为了钱，Rex经理同意了。但是 2 个月前，毒品的单子越来越少，Rex经理问理由，Louis却无视他。案发当天下午，Rex经理在房间里和Dylan乘务聊天的时候知道，她一直在帮Louis送巧克力。感到受到背叛的Rex经理向Louis质问理由，并发短信威胁他。那天傍晚，Louis来到Rex经理房间送来Rex经理喜欢的洋酒作为道歉礼物。Rex经理感到很奇怪，所以仔细的检查了酒、发现盖子上面有针眼，然后将酒倒进银杯，银杯发黑，知道酒中有毒。Louis想要像杀了以前船长一样杀人灭口。Rex经理决定先下手为强，先去操舵室拿了手枪里的一发子弹。(船上所有都知道那里有枪) 然后再等待烟花开始之后，逃离了人们的视线，跑到Louis在的仓库，仓库里看到后背受伤的Louis，然后对他开了枪。枪声被烟火掩盖住了。杀了人之后的Rex经理跑回自己房间，将刚拿的那一颗子弹放进枪膛里。将那颗空的弹壳藏到了香蜡里面\
+2 年前，经过父亲的朋友介绍Rex成为了东方之星号豪华游轮的酒吧经理，在船上的生活，让他对奢华生活产生了强烈的懂憬，之后，在酒吧偶然遇见了自己的高中校友，Louis，当时在船上担任三副，之后 2人越来越熟，不久后，Louis像Rex提出秘密交易的事情，告诉他利用游船偷偷贩毒可以获得巨额的利润，Rex经理接受了这个提议。他在自己管理的装有火药的烟花盒子里偷偷塞毒，Louis每个月都会有5万块打进来。1 年前，船上运毒的事件被发现老船长Hans发现，Louis将杨船长杀死，然后强迫Rex经理去做假证，之后Louis就被无罪释放了。 对Louis感到恐惧的Rex经理买了把左轮枪来防身。杨船长死后，Louis升为了副船长。半年前，Louis告诉Rex经理，自己贩卖毒品的利润会更高，于是让Rex经理将毒品藏在巧克力里面投递，为了钱，Rex经理同意了。但是 2 个月前，毒品的单子越来越少，Rex经理问理由，Louis却无视他。案发当天下午，Rex经理在房间里和Dylan乘务聊天的时候知道，她一直在帮Louis送巧克力。感到受到背叛的Rex经理向Louis质问理由，并发短信威胁他。那天傍晚，Louis来到Rex经理房间送来Rex经理喜欢的洋酒作为道歉礼物。Rex经理感到很奇怪，所以仔细的检查了酒、发现盖子上面有针眼，然后将酒倒进银杯，银杯发黑，知道酒中有毒。Louis想要像杀了以前船长一样杀人灭口。Rex经理决定先下手为强，先去操舵室拿了手枪里的一发子弹。(船上所有都知道那里有枪) 然后再等待烟花开始之后，逃离了人们的视线，跑到Louis在的仓库，仓库里看到后背受伤的Louis，然后对他开了枪。枪声被烟火掩盖住了。杀了人之后的Rex经理跑回自己房间，将刚拿的那一颗子弹放进枪膛里。将那颗空的弹壳藏到了香蜡里面\
         """
         
         conclusion_prompt = '\n\nHuman:' + conclusion_rules + "true answer:" + true_answer + "true story:" + true_story + "User's conclusion:" + st.session_state.conclusion_input + '\n\nAssistant:'

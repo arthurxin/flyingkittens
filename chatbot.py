@@ -2,6 +2,7 @@ import anthropic
 import streamlit as st
 from streamlit_chat import message
 import time
+import os
 
 # st.set_page_config(initial_sidebar_state='collapsed')
 st.markdown('Flyingkitten')
@@ -33,9 +34,10 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #     except Exception as e:
 #         st.error("Invalid key!")
 
-with open("../../.flying/claude_key.txt","r") as f:
-    API_KEY = f.read()
-client = anthropic.Client(API_KEY.rstrip('\n'))
+# with open("../../.flying/claude_key.txt","r") as f:
+#     API_KEY = f.read()
+# client = anthropic.Client(API_KEY.rstrip('\n'))
+client = anthropic.Client(mySecret = os.environ['MYSECRET']['key'])
 
 if 'context' not in st.session_state:
     context_rules = '''

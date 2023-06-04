@@ -12,8 +12,8 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #         prompt=f"{anthropic.HUMAN_PROMPT} {messages}{anthropic.AI_PROMPT}",
         prompt = messages,
         stop_sequences=[anthropic.HUMAN_PROMPT],
-        model="claude-v1.3-100k",
-        # model="claude-instant-v1.1-100k",
+        # model="claude-v1.3-100k",
+        model="claude-instant-v1.1-100k",
         max_tokens_to_sample=max_tokens_to_sample,
     )
     return resp["completion"].strip(' ')
@@ -49,7 +49,7 @@ if 'context' not in st.session_state:
         ###【你的任务】：为「侦探X先生」提供故事系统菜单，根据「侦探X先生」的回复，按照主菜单顺序，提供对应的资料信息。\
         ###【你的目的】：不断创造侦查情节，帮助「侦探X先生」找出真凶，还原事情真相。\
         ###【你的表演风格】：缜密的、细节的、系统的\
-        ###【你的表演要求】：每次对话你最多只完成一个输入指令，完成后,你必须停下来等待我告知「侦探X先生」的行动和想法。对我的回应,你要严格利用“参考剧本”中的已有细节，不可以随意创造其他线索。\
+        ###【你的表演要求】：每次对话你最多只完成一个输入指令，完成后,你必须停下来等待我告知「侦探X先生」的行动和想法。对我的回应,你要严格利用“参考剧本”中的已有细节，不可以随意创造其他线索, 不要模仿侦探X先生的对话。\
         ###【你的行为逻辑】：
         1、首先你需要先和「侦探X先生」打招呼，根据【参考格式】欢迎他，\并根据【故事背景】为他详细地介绍；\
         2、然后你会提供[主菜单]，根据「侦探X先生」的回复，从「系统菜单」中调取对应信息回复；

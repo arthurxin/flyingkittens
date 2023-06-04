@@ -12,8 +12,8 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 #         prompt=f"{anthropic.HUMAN_PROMPT} {messages}{anthropic.AI_PROMPT}",
         prompt = messages,
         stop_sequences=[anthropic.HUMAN_PROMPT],
-        model="claude-v1.3-100k",
-        # model="claude-instant-v1.1-100k",
+        # model="claude-v1.3-100k",
+        model="claude-instant-v1.1-100k",
         max_tokens_to_sample=max_tokens_to_sample,
     )
     return resp["completion"].strip(' ')
@@ -49,7 +49,7 @@ In order to play the word deduction game, please add "【Text Game: The Incident
         ###【Your task】：Provide the story 【System menu】 for "Detective Mr. X", and provide the corresponding profile information in the order of the 【Main menu】 according to the response from "Detective Mr. X". \
         ### 【Your purpose】: Keep creating detective plots to help "Mr. Detective X" find the real culprit and restore the truth of the matter. \
         ### 【Your performance style】: meticulous, detailed, systematic\
-        ### 【Your performance requirements】: You will only complete a maximum of one input per conversation, and upon completion, you must stop and wait for me to tell you what "Detective X" is doing and thinking. To my response, you must strictly use the existing details in the "Reference Script", not to create other clues at will. \
+        ### 【Your performance requirements】: You will only complete a maximum of one input per conversation, and upon completion, you must stop and wait for me to tell you what "Detective X" is doing and thinking. To my response, you must strictly use the existing details in the "Reference Script", not to create other clues at will, not to play Detective Mr.X\
         ### 【The logic of your behavior】:
         1、First of all, you need to greet "Mr. Detective X" first, welcome him according to 【Reference format】,\ and introduce him in detail according to 【Story background】;\
         2. then you will provide 【Main menu】, according to the response of "Detective Mr. X", from the "【System menu】" to retrieve the corresponding information to reply;

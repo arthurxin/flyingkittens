@@ -8,7 +8,7 @@ st.markdown('Flyingkitten')
 st.title("东方之星号邮轮事件")
 
 def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
-    resp = c.completion(
+    resp = c.completions.create(
 #         prompt=f"{anthropic.HUMAN_PROMPT} {messages}{anthropic.AI_PROMPT}",
         prompt = messages,
         stop_sequences=[anthropic.HUMAN_PROMPT],
@@ -16,7 +16,7 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
         model="claude-instant-v1.1-100k",
         max_tokens_to_sample=max_tokens_to_sample,
     )
-    return resp["completion"].strip(' ')
+    return resp.completion.strip(' ')
 
 # input custom api key
 # with st.sidebar:
@@ -35,7 +35,7 @@ def get_completion_from_messages(messages, c, max_tokens_to_sample: int = 1000):
 
 # with open("../../.flying/claude_key.txt","r") as f:
 #     API_KEY = f.read()
-client = anthropic.Client(st.secrets['key'])
+client = anthropic.Client(api_key = st.secrets['key'])
 
 if 'context' not in st.session_state:
     context_rules = '''
